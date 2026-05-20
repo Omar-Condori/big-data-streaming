@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  producer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: tickdb-producer
+    environment:
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+    networks:
+      - 01-docker_default
+
+networks:
+  01-docker_default:
+    external: true

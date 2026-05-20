@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  jupyter:
+    image: jupyter/pyspark-notebook:latest
+    container_name: tickdb-jupyter
+    ports:
+      - "8888:8888"
+    environment:
+      - JUPYTER_TOKEN=tickdb
+    volumes:
+      - ./notebook:/home/jovyan/work
+    networks:
+      - 01-docker_default
+
+networks:
+  01-docker_default:
+    external: true

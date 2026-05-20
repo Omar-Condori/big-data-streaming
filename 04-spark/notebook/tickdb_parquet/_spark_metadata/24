@@ -1,0 +1,6 @@
+v1
+{"path":"file:///home/jovyan/work/tickdb_parquet/part-00000-0cae2d47-a6b6-48f5-8c33-8361d7282674-c000.snappy.parquet","size":983,"isDir":false,"modificationTime":1779203960778,"blockReplication":1,"blockSize":33554432,"action":"add"}
+{"path":"file:///home/jovyan/work/tickdb_parquet/part-00014-dc9c4c62-ca5c-44ec-a3b7-65bb84d117a9-c000.snappy.parquet","size":2275,"isDir":false,"modificationTime":1779203960848,"blockReplication":1,"blockSize":33554432,"action":"add"}
+{"path":"file:///home/jovyan/work/tickdb_parquet/part-00056-5a05915a-1273-48c4-aa38-23ab84062976-c000.snappy.parquet","size":2303,"isDir":false,"modificationTime":1779203961021,"blockReplication":1,"blockSize":33554432,"action":"add"}
+{"path":"file:///home/jovyan/work/tickdb_parquet/part-00111-96879903-40cd-450f-95c5-6682b0f2dfaa-c000.snappy.parquet","size":2289,"isDir":false,"modificationTime":1779203961323,"blockReplication":1,"blockSize":33554432,"action":"add"}
+{"path":"file:///home/jovyan/work/tickdb_parquet/part-00155-d2ce2093-47e5-47b5-b8a3-0d43474d729f-c000.snappy.parquet","size":2280,"isDir":false,"modificationTime":1779203961535,"blockReplication":1,"blockSize":33554432,"action":"add"}
