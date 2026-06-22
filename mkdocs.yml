@@ -1,7 +1,7 @@
 site_name: TickDB Streaming Pipeline
 site_description: Pipeline Big Data en Tiempo Real con Kafka, Spark y ML
 site_author: Big Data Proyecto
-repo_url: https://github.com/anomalyco/tickdb-streaming
+repo_url: https://github.com/Omar-Condori/big-data-streaming
 edit_uri: edit/main/docs/
 copyright: "2026 — Omar Condori Pachauri, Mery Elizabeth Flores Llanque, Jaqueline Huahuaccapa Ccama"
 
