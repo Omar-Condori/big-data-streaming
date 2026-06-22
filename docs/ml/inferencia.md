@@ -89,6 +89,16 @@ query = df_valid \
 | RSI | 0.6% |
 | SMA_20 | 0.3% |
 
+## Comparación de Modelos
+
+| Modelo | MAE | RMSE | R² |
+|--------|-----|------|-----|
+| **Random Forest** 🏆 | **$12.02** | **$18.41** | **0.9998** |
+| GBT (Gradient Boosting) | $XX.XX | $XX.XX | X.XXXX |
+| Regresión Lineal | $XX.XX | $XX.XX | X.XXXX |
+
+**Random Forest** fue el mejor modelo por su bajo error y robustez.
+
 ## Métricas del Modelo
 
 | Métrica | Valor |

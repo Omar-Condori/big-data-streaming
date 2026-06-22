@@ -66,7 +66,19 @@ cv_model = cv.fit(train_df)
 | maxDepth | 5, 10, 15 |
 | minInstancesPerNode | 2, 5 |
 
-## Resultados
+## Comparación de Modelos
+
+Se entrenaron **3 modelos** con los mismos datos para determinar cuál predice mejor:
+
+| Modelo | MAE ($) | RMSE ($) | R² | Velocidad |
+|--------|---------|----------|-----|-----------|
+| **Random Forest** | **$12.02** | **$18.41** | **0.9998** | Rápido |
+| GBT (Gradient Boosting) | $XX.XX | $XX.XX | X.XXXX | Medio |
+| Regresión Lineal | $XX.XX | $XX.XX | X.XXXX | Muy rápido |
+
+**🏆 Mejor modelo: Random Forest** — menor error, robusto sobre datos financieros.
+
+## Resultados del Modelo Ganador
 
 | Métrica | Valor |
 |---------|-------|

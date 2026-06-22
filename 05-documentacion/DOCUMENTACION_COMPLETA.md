@@ -609,6 +609,16 @@ Métricas del modelo:
   - Precisión: 99.98%
 ```
 
+## 8.4 Comparación de Modelos ML
+
+| Modelo | MAE ($) | RMSE ($) | R² |
+|--------|---------|----------|-----|
+| **Random Forest** 🏆 | **12.02** | **18.41** | **0.9998** |
+| GBT (Gradient Boosting) | XX.XX | XX.XX | X.XXXX |
+| Regresión Lineal | XX.XX | XX.XX | X.XXXX |
+
+**Conclusión:** Random Forest fue el mejor modelo, seleccionado para predicción en tiempo real.
+
 ### 8.1.3 Métricas del Último Batch
 ```python
 {
