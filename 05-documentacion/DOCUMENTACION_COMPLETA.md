@@ -78,7 +78,7 @@ La necesidad de procesar y analizar datos financieros de múltiples mercados (fo
 
 **Símbolos monitoreados:**
 - **Forex**: XAUUSD, GBPUSD, EURUSD, USDJPY
-- **Índices**: SPX, NDX, HSI, DJIA, FTSE, DAX
+- **Índices**: SPX, NDX, HSI
 - **Acciones US**: AAPL.US, TSLA.US, MSFT.US, NVDA.US, GOOGL.US, AMZN.US, META.US
 - **Acciones HK**: 700.HK, 9988.HK, 3690.HK
 - **Cripto**: BTCUSDT, ETHUSDT, SOLUSDT, BNBUSDT
@@ -153,7 +153,7 @@ from datetime import datetime
 from kafka import KafkaProducer
 import os
 
-API_KEY = "xs524g6UkSwLKRUv9jQL-JZpaKcOPXu1"
+API_KEY = "VkBMPUBscEyxlNs_Y2g2FZpAP-4uMzY0"
 KAFKA_BOOTSTRAP_SERVERS = os.environ.get("KAFKA_BOOTSTRAP_SERVERS", "kafka:9092")
 TOPIC = "tickdb-market-data"
 INTERVAL = 5
@@ -167,7 +167,7 @@ producer = KafkaProducer(
 
 symbols = {
     "forex": ["XAUUSD", "GBPUSD", "EURUSD", "USDJPY"],
-    "indices": ["SPX", "NDX", "HSI", "DJIA", "FTSE", "DAX"],
+    "indices": ["SPX", "NDX", "HSI"],
     "us_stocks": ["AAPL.US", "TSLA.US", "MSFT.US", "NVDA.US", "GOOGL.US", "AMZN.US", "META.US"],
     "hk_stocks": ["700.HK", "9988.HK", "3690.HK"],
     "crypto": ["BTCUSDT", "ETHUSDT", "SOLUSDT", "BNBUSDT"]

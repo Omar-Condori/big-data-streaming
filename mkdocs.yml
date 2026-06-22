@@ -1,0 +1,90 @@
+site_name: TickDB Streaming Pipeline
+site_description: Pipeline Big Data en Tiempo Real con Kafka, Spark y ML
+site_author: Big Data Proyecto
+repo_url: https://github.com/anomalyco/tickdb-streaming
+edit_uri: edit/main/docs/
+copyright: "2026 — Omar Condori Pachauri, Mery Elizabeth Flores Llanque, Jaqueline Huahuaccapa Ccama"
+
+theme:
+  name: material
+  language: es
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/weather-night
+        name: Modo oscuro
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/weather-sunny
+        name: Modo claro
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.code.annotate
+
+extra:
+  generator: false
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/anomalyco/tickdb-streaming
+
+nav:
+  - Inicio: index.md
+  - Arquitectura:
+    - Visión General: arquitectura/vision-general.md
+    - Componentes: arquitectura/componentes.md
+    - Flujo de Datos: arquitectura/flujo-datos.md
+    - Kafka vs Directo: arquitectura/kafka-vs-directo.md
+  - Guía Rápida:
+    - Requisitos: guia/requisitos.md
+    - Instalación: guia/instalacion.md
+    - Uso: guia/uso.md
+    - Demo: guia/demo.md
+  - Infraestructura:
+    - Docker Compose: infra/docker-compose.md
+    - Kafka: infra/kafka.md
+    - HDFS: infra/hdfs.md
+    - Monitoreo: infra/monitoreo.md
+    - MLflow: infra/mlflow.md
+  - Procesamiento:
+    - Producer: procesamiento/producer.md
+    - Spark Streaming: procesamiento/spark-streaming.md
+    - ETL Batch: procesamiento/etl-batch.md
+  - Machine Learning:
+    - ML Distribuido: ml/ml-distribuido.md
+    - Feature Engineering: ml/feature-engineering.md
+    - Experimentación: ml/experimentacion.md
+    - Inferencia: ml/inferencia.md
+  - Resultados:
+    - Métricas: resultados/metricas.md
+    - Costos: resultados/costos.md
+    - Evidencias: resultados/evidencias.md
+    - Conclusiones: resultados/conclusiones.md
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - tables
+  - toc:
+      permalink: true
+
+plugins:
+  - search

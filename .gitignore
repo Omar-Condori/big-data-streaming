@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.pyc
+*.egg-info/
+.venv/
+
+# Docker
+.env
+
+# Jupyter
+.ipynb_checkpoints/
+.ipynb_checkpoints/
+
+# MkDocs
+site/
+
+# Notebook artifacts
+04-spark/notebook/tickdb_parquet/
+04-spark/notebook/ml_data/
+04-spark/notebook/models/
+04-spark/notebook/checkpoint/
+04-spark/notebook/checkpoint_ml/
+04-spark/notebook/etl_output/
+04-spark/notebook/btc_predictor.pkl
+
+# IDE
+.idea/
+.vscode/
+*.swp
+.DS_Store

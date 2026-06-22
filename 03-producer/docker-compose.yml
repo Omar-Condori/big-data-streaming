@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   producer:
     build:
@@ -9,8 +7,8 @@ services:
     environment:
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
     networks:
-      - 01-docker_default
+      - tickdb-net
 
 networks:
-  01-docker_default:
+  tickdb-net:
     external: true

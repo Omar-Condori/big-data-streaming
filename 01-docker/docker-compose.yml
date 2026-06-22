@@ -1,6 +1,7 @@
-version: '3.8'
-
 services:
+  # ============================================================
+  # KAFKA INFRASTRUCTURE
+  # ============================================================
   zookeeper:
     image: confluentinc/cp-zookeeper:7.5.0
     hostname: zookeeper
@@ -10,44 +11,129 @@ services:
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
-    network_mode: "host"
+    healthcheck:
+      test: echo srvr | nc zookeeper 2181 || exit 1
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    networks:
+      - tickdb-net
 
   kafka:
     image: confluentinc/cp-kafka:7.5.0
     hostname: kafka
     container_name: tickdb-kafka
     depends_on:
-      - zookeeper
+      zookeeper:
+        condition: service_healthy
     ports:
       - "49092:49092"
-      - "49093:49093"
     environment:
       KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: "localhost:42181"
-      KAFKA_ADVERTISED_LISTENERS: "PLAINTEXT://localhost:49092,PLAINTEXT_HOST://localhost:49092"
+      KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
+      KAFKA_ADVERTISED_LISTENERS: "PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:49092"
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: "PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT"
       KAFKA_INTER_BROKER_LISTENER_NAME: "PLAINTEXT"
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
-    network_mode: "host"
+      KAFKA_NUM_PARTITIONS: 3
+    healthcheck:
+      test: nc -z kafka 9092 || exit 1
+      interval: 30s
+      timeout: 10s
+      retries: 10
+    networks:
+      - tickdb-net
+
+  schema-registry:
+    image: confluentinc/cp-schema-registry:7.5.0
+    hostname: schema-registry
+    container_name: tickdb-schema-registry
+    depends_on:
+      kafka:
+        condition: service_healthy
+    ports:
+      - "48081:8081"
+    environment:
+      SCHEMA_REGISTRY_HOST_NAME: schema-registry
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: "kafka:9092"
+      SCHEMA_REGISTRY_LISTENERS: "http://0.0.0.0:8081"
+    healthcheck:
+      test: curl -f http://localhost:8081 || exit 1
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    networks:
+      - tickdb-net
 
   kafka-ui:
-    image: provectuslabs/kafka-ui:latest
+    image: provectuslabs/kafka-ui:v0.7.1
     container_name: tickdb-kafka-ui
     depends_on:
-      - kafka
+      kafka:
+        condition: service_healthy
     ports:
       - "48085:8080"
     environment:
       KAFKA_CLUSTERS_0_NAME: tickdb-streaming
-      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: localhost:49092
-      KAFKA_CLUSTERS_0_ZOOKEEPER: localhost:42181
-    network_mode: "host"
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
+      KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181
+      KAFKA_CLUSTERS_0_SCHEMAREGISTRY: http://schema-registry:8081
+    networks:
+      - tickdb-net
 
+  # ============================================================
+  # HDFS (Hadoop Distributed File System)
+  # ============================================================
+  hdfs-namenode:
+    image: apache/hadoop:3.3.6
+    hostname: hdfs-namenode
+    container_name: tickdb-hdfs-namenode
+    ports:
+      - "49870:9870"
+      - "49000:9000"
+    environment:
+      HADOOP_HOME: /opt/hadoop
+      HDFS_CONF_dfs_namenode_name_dir: /hadoop/dfs/name
+      HDFS_CONF_dfs_replication: "1"
+      HDFS_CONF_dfs_webhdfs_enabled: "true"
+      HDFS_CONF_dfs_permissions_enabled: "false"
+    volumes:
+      - hdfs_namenode:/hadoop/dfs/name
+    command: ["hdfs", "namenode"]
+    healthcheck:
+      test: curl -f http://localhost:9870 || exit 1
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    networks:
+      - tickdb-net
+
+  hdfs-datanode:
+    image: apache/hadoop:3.3.6
+    hostname: hdfs-datanode
+    container_name: tickdb-hdfs-datanode
+    depends_on:
+      - hdfs-namenode
+    environment:
+      HADOOP_HOME: /opt/hadoop
+      HDFS_CONF_dfs_datanode_data_dir: /hadoop/dfs/data
+      HDFS_CONF_dfs_replication: "1"
+      HDFS_CONF_dfs_webhdfs_enabled: "true"
+      HDFS_CONF_dfs_permissions_enabled: "false"
+    volumes:
+      - hdfs_datanode:/hadoop/dfs/data
+    command: ["hdfs", "datanode"]
+    networks:
+      - tickdb-net
+
+  # ============================================================
+  # MONITORING (Prometheus + Grafana)
+  # ============================================================
   prometheus:
-    image: prom/prometheus:latest
+    image: prom/prometheus:v2.48.0
     container_name: tickdb-streaming-prometheus
     ports:
       - "49090:9090"
@@ -57,20 +143,55 @@ services:
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.path=/prometheus'
-    network_mode: "host"
+    healthcheck:
+      test: wget -qO- http://localhost:9090/-/ready || exit 1
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    networks:
+      - tickdb-net
 
   kafka-exporter:
-    image: danielqsj/kafka-exporter:latest
+    image: danielqsj/kafka-exporter:v1.6.0
     container_name: tickdb-streaming-exporter
+    depends_on:
+      kafka:
+        condition: service_healthy
     ports:
       - "49308:9308"
     environment:
-      - KAFKA_BROKER=localhost:49092
+      - KAFKA_BROKER=kafka:9092
       - KAFKA_VERSION=3.5
-    network_mode: "host"
+    networks:
+      - tickdb-net
+
+  node-exporter:
+    image: prom/node-exporter:v1.6.1
+    container_name: tickdb-node-exporter
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - --collector.filesystem.ignored-mount-points
+      - "^/(sys|proc|dev|host|etc)($$|/)"
+    ports:
+      - "49100:9100"
+    networks:
+      - tickdb-net
+
+  pushgateway:
+    image: prom/pushgateway:v1.6.2
+    container_name: tickdb-pushgateway
+    ports:
+      - "49091:9091"
+    networks:
+      - tickdb-net
 
   grafana:
-    image: grafana/grafana:latest
+    image: grafana/grafana:10.2.0
     container_name: tickdb-streaming-grafana
     ports:
       - "43000:3000"
@@ -81,12 +202,50 @@ services:
     environment:
       GF_SECURITY_ADMIN_USER: admin
       GF_SECURITY_ADMIN_PASSWORD: admin
-    network_mode: "host"
+    healthcheck:
+      test: wget -qO- http://localhost:3000/api/health || exit 1
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    networks:
+      - tickdb-net
+
+  # ============================================================
+  # MLFLOW (Experiment Tracking)
+  # ============================================================
+  mlflow:
+    image: ghcr.io/mlflow/mlflow:v2.9.0
+    container_name: tickdb-mlflow
+    ports:
+      - "45000:5000"
+    environment:
+      MLFLOW_HOST: "0.0.0.0"
+      MLFLOW_BACKEND_STORE_URI: "file:///mlflow"
+      MLFLOW_ARTIFACT_ROOT: "file:///mlflow/artifacts"
+    volumes:
+      - mlflow_data:/mlflow
+    command: >
+      mlflow server
+      --host 0.0.0.0
+      --port 5000
+      --backend-store-uri file:///mlflow
+      --default-artifact-root file:///mlflow/artifacts
+    healthcheck:
+      test: curl -f http://localhost:5000 || exit 1
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    networks:
+      - tickdb-net
 
 networks:
-  01-docker_default:
-    external: true
+  tickdb-net:
+    driver: bridge
+    name: tickdb-net
 
 volumes:
   prometheus_data:
   grafana_data:
+  hdfs_namenode:
+  hdfs_datanode:
+  mlflow_data:

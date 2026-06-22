@@ -16,6 +16,7 @@
   "gnetId": null,
   "graphTooltip": 0,
   "id": null,
+  "uid": "tickdb-streaming",
   "links": [],
   "panels": [
     {
@@ -36,7 +37,7 @@
         },
         "overrides": []
       },
-      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0},
+      "gridPos": {"h": 6, "w": 8, "x": 0, "y": 0},
       "id": 2,
       "options": {
         "orientation": "auto",
@@ -47,15 +48,83 @@
       "pluginVersion": "8.0.0",
       "targets": [
         {
-          "expr": "kafka_broker_active_controllers",
+          "expr": "kafka_brokers",
           "refId": "A"
-        },
-        {
-          "expr": "kafka_broker_offline_partitions",
-          "refId": "B"
         }
       ],
-      "title": "Kafka Broker Status",
+      "title": "Kafka Brokers Active",
+      "type": "gauge"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "color": {"mode": "thresholds"},
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {"color": "green", "value": null},
+              {"color": "yellow", "value": 50},
+              {"color": "red", "value": 80}
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {"h": 6, "w": 8, "x": 8, "y": 0},
+      "id": 6,
+      "options": {
+        "orientation": "auto",
+        "reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false},
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      },
+      "pluginVersion": "8.0.0",
+      "targets": [
+        {
+          "expr": "100 - (avg by (instance) (rate(node_cpu_seconds_total{mode=\"idle\"}[5m])) * 100)",
+          "refId": "A"
+        }
+      ],
+      "title": "System CPU Usage",
+      "type": "gauge"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "color": {"mode": "thresholds"},
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {"color": "green", "value": null},
+              {"color": "yellow", "value": 70},
+              {"color": "red", "value": 90}
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {"h": 6, "w": 8, "x": 16, "y": 0},
+      "id": 7,
+      "options": {
+        "orientation": "auto",
+        "reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false},
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      },
+      "pluginVersion": "8.0.0",
+      "targets": [
+        {
+          "expr": "100 * (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes))",
+          "refId": "A"
+        }
+      ],
+      "title": "System RAM Usage",
       "type": "gauge"
     },
     {
@@ -70,7 +139,7 @@
         },
         "overrides": []
       },
-      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0},
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 6},
       "id": 3,
       "options": {
         "legend": {"calcs": [], "displayMode": "list", "placement": "bottom"},
@@ -79,12 +148,12 @@
       "pluginVersion": "8.0.0",
       "targets": [
         {
-          "expr": "rate(kafka_consumergroup_records_consumed_total[5m])",
-          "legendFormat": "{{consumergroup}}",
+          "expr": "sum(rate(kafka_topic_partition_current_offset[1m]))",
+          "legendFormat": "Messages/sec",
           "refId": "A"
         }
       ],
-      "title": "Kafka Consumer Throughput",
+      "title": "Kafka Ingest Rate (approx)",
       "type": "timeseries"
     },
     {
@@ -99,7 +168,7 @@
         },
         "overrides": []
       },
-      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8},
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 6},
       "id": 4,
       "options": {
         "legend": {"calcs": [], "displayMode": "list", "placement": "bottom"},
@@ -124,62 +193,26 @@
           "custom": {"axisLabel": "", "axisPlacement": "auto", "barAlignment": 0, "drawStyle": "line", "fillOpacity": 10, "gradientMode": "none", "hideFrom": {"tooltip": false, "viz": false, "legend": false}, "lineInterpolation": "linear", "lineWidth": 1, "pointSize": 5, "scaleDistribution": {"type": "linear"}, "showPoints": "never", "spanNulls": true},
           "mappings": [],
           "thresholds": {"mode": "absolute", "steps": [{"color": "green", "value": null}]},
-          "unit": "short"
+          "unit": "currencyUSD"
         },
         "overrides": []
       },
-      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 8},
-      "id": 5,
+      "gridPos": {"h": 8, "w": 24, "x": 0, "y": 14},
+      "id": 8,
       "options": {
-        "legend": {"calcs": [], "displayMode": "list", "placement": "bottom"},
+        "legend": {"calcs": ["lastNotNull"], "displayMode": "list", "placement": "bottom"},
         "tooltip": {"mode": "single"}
       },
       "pluginVersion": "8.0.0",
       "targets": [
         {
-          "expr": "rate(kafka_server_brokertopicmetrics_messages_in_total[5m])",
-          "legendFormat": "{{topic}}",
+          "expr": "last_price",
+          "legendFormat": "{{symbol}}",
           "refId": "A"
         }
       ],
-      "title": "Kafka Messages In",
+      "title": "Live Market Prices (from Pushgateway)",
       "type": "timeseries"
-    },
-    {
-      "datasource": "Prometheus",
-      "fieldConfig": {
-        "defaults": {
-          "color": {"mode": "thresholds"},
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {"color": "green", "value": null},
-              {"color": "yellow", "value": 50},
-              {"color": "red", "value": 80}
-            ]
-          },
-          "unit": "percent"
-        },
-        "overrides": []
-      },
-      "gridPos": {"h": 8, "w": 24, "x": 0, "y": 16},
-      "id": 6,
-      "options": {
-        "orientation": "auto",
-        "reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false},
-        "showThresholdLabels": false,
-        "showThresholdMarkers": true
-      },
-      "pluginVersion": "8.0.0",
-      "targets": [
-        {
-          "expr": "100 - (avg by (instance) (rate(node_cpu_seconds_total{mode=\"idle\"}[5m])) * 100)",
-          "refId": "A"
-        }
-      ],
-      "title": "System CPU Usage",
-      "type": "gauge"
     }
   ],
   "refresh": "5s",

@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   jupyter:
     image: jupyter/pyspark-notebook:latest
@@ -11,8 +9,8 @@ services:
     volumes:
       - ./notebook:/home/jovyan/work
     networks:
-      - 01-docker_default
+      - tickdb-net
 
 networks:
-  01-docker_default:
+  tickdb-net:
     external: true
