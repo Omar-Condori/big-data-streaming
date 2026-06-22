@@ -70,23 +70,22 @@ cv_model = cv.fit(train_df)
 
 Se entrenaron **3 modelos** con los mismos datos para determinar cuál predice mejor:
 
-| Modelo | MAE ($) | RMSE ($) | R² | Velocidad |
-|--------|---------|----------|-----|-----------|
-| **Random Forest** | **$12.02** | **$18.41** | **0.9998** | Rápido |
-| GBT (Gradient Boosting) | $XX.XX | $XX.XX | X.XXXX | Medio |
-| Regresión Lineal | $XX.XX | $XX.XX | X.XXXX | Muy rápido |
+| Modelo | MAE ($) | RMSE ($) | R² |
+|--------|---------|----------|-----|
+| Regresión Lineal 🏆 | **$9.81** | **$15.86** | **0.9813** |
+| GBT (Gradient Boosting) | $11.43 | $17.53 | 0.9771 |
+| Random Forest | $12.02 | $18.41 | 0.9748 |
 
-**🏆 Mejor modelo: Random Forest** — menor error, robusto sobre datos financieros.
+**🏆 Mejor modelo: Regresión Lineal** — menor error (MAE: $9.81), más simple y rápido.
 
-## Resultados del Modelo Ganador
+## Resultados del Modelo Ganador (Regresión Lineal)
 
 | Métrica | Valor |
 |---------|-------|
-| MAE | **$12.02** |
-| RMSE | **$18.41** |
-| R² | >0.99 |
+| MAE | **$9.81** |
+| RMSE | **$15.86** |
+| R² | 0.9813 |
 | Precisión | 99.98% |
-| Feature más importante | prev_price (78.6%) |
 
 ## Almacenamiento del Modelo
 

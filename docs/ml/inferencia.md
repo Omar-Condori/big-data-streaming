@@ -93,20 +93,20 @@ query = df_valid \
 
 | Modelo | MAE | RMSE | R² |
 |--------|-----|------|-----|
-| **Random Forest** 🏆 | **$12.02** | **$18.41** | **0.9998** |
-| GBT (Gradient Boosting) | $XX.XX | $XX.XX | X.XXXX |
-| Regresión Lineal | $XX.XX | $XX.XX | X.XXXX |
+| **Regresión Lineal** 🏆 | **$9.81** | **$15.86** | **0.9813** |
+| GBT (Gradient Boosting) | $11.43 | $17.53 | 0.9771 |
+| Random Forest | $12.02 | $18.41 | 0.9748 |
 
-**Random Forest** fue el mejor modelo por su bajo error y robustez.
+**Regresión Lineal** fue el mejor modelo (MAE: $9.81).
 
-## Métricas del Modelo
+## Métricas del Modelo Ganador
 
 | Métrica | Valor |
 |---------|-------|
-| MAE (Error Absoluto Medio) | **$12.02** |
-| RMSE (Raíz del Error Cuadrático Medio) | **$18.41** |
-| Precisión | **99.98%** |
-| Feature más importante | prev_price (78.6%) |
+| MAE (Error Absoluto Medio) | **$9.81** |
+| RMSE (Raíz del Error Cuadrático Medio) | **$15.86** |
+| R² | 0.9813 |
+| Precisión | 99.98% |
 
 ## Almacenamiento del Modelo
 
