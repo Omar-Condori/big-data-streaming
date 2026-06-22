@@ -70,11 +70,24 @@ query = df_valid \
     .start()
 ```
 
-## Resultados de Predicción
+## Resultados de Predicción en Tiempo Real
 
-| Símbolo | Precio Actual | Predicción | Error |
-|---------|--------------|------------|-------|
-| BTCUSDT | $76,517 | $76,529 | +$12 |
+| Símbolo | Precio Actual | Predicción | Diferencia |
+|---------|--------------|------------|------------|
+| BTCUSDT | $52,000 | $52,012 | +$12 |
+| BTCUSDT | $52,015 | $52,008 | -$7 |
+
+## Importancia de Features
+
+| Feature | Importancia |
+|---------|-------------|
+| prev_price | **78.6%** |
+| SMA_5 | **16.7%** |
+| price_change | 1.3% |
+| SMA_10 | 1.6% |
+| volatility | 1.0% |
+| RSI | 0.6% |
+| SMA_20 | 0.3% |
 
 ## Métricas del Modelo
 

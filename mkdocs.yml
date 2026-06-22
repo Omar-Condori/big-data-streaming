@@ -66,6 +66,7 @@ nav:
     - Inferencia: ml/inferencia.md
   - Resultados:
     - Métricas: resultados/metricas.md
+    - Predicciones: resultados/predicciones.md
     - Costos: resultados/costos.md
     - Evidencias: resultados/evidencias.md
     - Conclusiones: resultados/conclusiones.md
